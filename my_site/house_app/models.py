@@ -52,7 +52,7 @@ class Property(models.Model):
     )
     property_type = models.CharField(max_length=32, choices=PropertyType)
     region = models.ForeignKey(Region , on_delete=models.CASCADE)
-    city = models.ForeignKey(City, on_delete=models.CASCADE)
+    city = models.ForeignKey(City, on_delete=models.CASCADE, related_name='city_photo')
     district = models.ForeignKey(District, on_delete=models.CASCADE)
     address = models.CharField(max_length=64)
     area = models.IntegerField()
@@ -74,19 +74,34 @@ class Property(models.Model):
     def __str__(self):
         return self.title
 
+    def get_average_rating(self):
+        ratings = self.review_property.all()
+        if ratings.exists():
+            return round(sum([i.rating for i in ratings]) / ratings.count(), 2)
+        return 0
+
+    def get_count_people(self):
+        return self.review_property.count()
+
 
 class PropertyImage(models.Model):
-    property = models.ForeignKey(Property, on_delete=models.CASCADE)
+    property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='property_photo')
     image = models.ImageField(upload_to='property_image')
 
 
 class Review(models.Model):
+    property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='review_property')
     buyer = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='buyer_review')
     owner = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='owner_review')
     rating = models.PositiveSmallIntegerField(validators=[MinValueValidator(1),MaxValueValidator(5)])
     comment = models.TextField()
+    create_data = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.comment
+
+
+
+
 
 
