@@ -2,7 +2,8 @@ from django.urls import path, include
 from rest_framework import routers
 from .views import (UserProfileViewSet, RegionListAPIView, RegionDetailAPIView, CityListAPIView,
                     CityDetailAPIView, DistrictListAPIView, DistrictDetailAPIView,
-                    PropertyListAPIView, PropertyDetailAPIView, PropertyImageViewSet, ReviewViewSet,PropertyCreateAPIView,PropertyEditAPIView)
+                    PropertyListAPIView, PropertyDetailAPIView, PropertyImageViewSet,
+                    ReviewViewSet,PropertyCreateAPIView,PropertyEditAPIView, RegisterView, LoginView, LogoutView)
 
 router = routers.DefaultRouter()
 
@@ -13,7 +14,13 @@ router.register('reviews', ReviewViewSet),
 
 
 urlpatterns = [
+
     path('', include(router.urls)),
+    path('register/', RegisterView.as_view(), name='register'),
+    path('login/', LoginView.as_view(), name='login'),
+    path('logout/', LogoutView.as_view(), name='logout'),
+    path('', include(router.urls)),
+
     path('property/', PropertyListAPIView.as_view(), name='property_list'),
     path('property/<int:pk>/', PropertyDetailAPIView.as_view(), name='property_detail'),
     path('property/create/', PropertyCreateAPIView.as_view(), name='property_detail'),
