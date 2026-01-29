@@ -71,7 +71,7 @@ class PropertyListSerializer(serializers.ModelSerializer):
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
-        fields = '__all__'
+        fields = ['username','comment']
 
 
 
